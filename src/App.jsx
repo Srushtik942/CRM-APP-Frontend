@@ -3,7 +3,9 @@ import Sidebar from "./components/sidebar";
 import Body from "./pages/Body";
 import LeadManagement from "./pages/LeadManagement";
 import LeadList from "./pages/LeadList";
-import NewLead from "./pages/NewLead"
+import NewLead from "./pages/NewLead";
+import SalesAgent from "./pages/SalesAgent";
+import NewAgent from "./pages/NewAgent";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
             <Route path="/lead" element={<LeadManagement />} />
             <Route path="/leadList" element={<LeadList/>}/>
             <Route path="/newLead" element={<NewLead/>} />
+            <Route path="/sales" element={<SalesAgent/>}/>
+            <Route path="/agents" element={<NewAgent/>}/>
           </Routes>
         </div>
       </div>
