@@ -10,7 +10,7 @@ const SalesAgent = () => {
 
   return (
       <div className="p-6">
-      <h2 className="text-3xl font-semibold mb-6 text-center">Sales Agent List</h2>
+      <h2 className="text-3xl font-semibold mb-6 text-center text-gray-600">Sales Agent List</h2>
 
       <div className="bg-white shadow-xl rounded-lg overflow-hidden">
         <table className="w-full border-collapse">

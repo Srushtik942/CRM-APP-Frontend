@@ -30,7 +30,7 @@ const Body = () => {
     <div className="p-10 w-full min-h-screen bg-linear-to-br from-green-50 via-pink to-purple-100">
 
       {/* Title */}
-      <h2 className="text-center font-bold text-5xl mb-12 text-gray-900 tracking-wide drop-shadow-sm">
+      <h2 className="text-center font-bold text-5xl mb-12 text-gray-600 tracking-wide drop-shadow-sm">
         Anvaya CRM Dashboard
       </h2>
 
@@ -49,7 +49,7 @@ const Body = () => {
 
       {/* Lead Status Section */}
       <div className="mt-14">
-        <h2 className="text-center font-semibold text-3xl mb-10 text-gray-800">
+        <h2 className="text-center font-semibold text-3xl mb-10 text-gray-600">
           Lead Status
         </h2>
 
@@ -80,7 +80,7 @@ const Body = () => {
 
       {/* Quick Filters */}
       <div className="mt-20 text-center">
-        <h3 className="text-2xl font-semibold mb-6 text-gray-800">Quick Filters</h3>
+        <h3 className="text-2xl font-semibold mb-6 text-gray-600">Quick Filters</h3>
 
         <div className="flex justify-center gap-6 flex-wrap">
           {["New", "Contacted", "Qualified", "Closed"].map((filter, i) => (

@@ -11,7 +11,7 @@ const LeadList = () => {
     <div className="min-h-screen bg-linear-to-br from-purple-100 via-white to-green-100 py-12 px-6">
 
       <div className="max-w-3xl mx-auto flex justify-between items-center mb-10">
-        <h2 className="text-4xl font-bold text-gray-700">Lead List</h2>
+        <h2 className="text-4xl font-semibold text-gray-600">Lead List</h2>
 
            <button className="bg-purple-500 hover:bg-purple-600 cursor-pointer text-white font-medium px-6 py-2 rounded-xl shadow-lg">
           Add New Lead
@@ -21,7 +21,7 @@ const LeadList = () => {
       {/* Lead Card */}
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-8">
 
-        <h3 className="text-3xl font-bold text-center mb-6 text-gray-700">
+        <h3 className="text-3xl font-sans text-center mb-6 text-gray-600">
           Lead Overview
         </h3>
 

@@ -4,7 +4,7 @@ const NewAgent = () => {
   return (
     <div className="max-w-md mx-auto mt-10 bg-white shadow-2xl rounded-2xl p-8">
 
-      <h2 className="text-3xl font-semibold text-center text-purple-700">
+      <h2 className="text-3xl font-semibold text-center text-gray-600 ">
         Add New Sales Agent
       </h2>
 
