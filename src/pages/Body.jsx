@@ -27,7 +27,7 @@ const Body = () => {
   ];
 
   return (
-    <div className="p-10 w-full min-h-screen bg-linear-to-br from-gray-50 via-white to-purple-100">
+    <div className="p-10 w-full min-h-screen bg-linear-to-br from-green-50 via-pink to-purple-100">
 
       {/* Title */}
       <h2 className="text-center font-bold text-5xl mb-12 text-gray-900 tracking-wide drop-shadow-sm">
@@ -88,7 +88,7 @@ const Body = () => {
               key={i}
               className="px-8 py-3 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200
               shadow-md hover:bg-green-500 hover:text-white hover:scale-105 transition-all duration-300
-              text-gray-700 font-medium"
+              text-gray-700 font-medium cursor-pointer"
             >
               {filter}
             </button>
