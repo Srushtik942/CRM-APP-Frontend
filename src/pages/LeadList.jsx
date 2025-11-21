@@ -1,11 +1,45 @@
 import React from 'react';
+import { useNavigate } from 'react-router';
 
 const LeadList = () => {
+  const navigate = useNavigate();
   const leads = [
-    { lead: "Lead 1", status: "New", person: "John Doe" },
-    { lead: "Lead 2", status: "Qualified", person: "Jane Washington" },
-    { lead: "Lead 3", status: "Proposal Sent", person: "Mark Zukerberg" }
+    {
+      lead: "Lead 1",
+      status: "Qualified",
+      person: "John Doe",
+      tags: ["High Value"],
+      source: "Website",
+      priority: 2,
+      closeDate: "2025-11-25",
+    },
+    {
+      lead: "Lead 2",
+      status: "New",
+      person: "Jane Washington",
+      tags: ["Urgent"],
+      source: "Referral",
+      priority: 1,
+      closeDate: "2025-11-20",
+    },
+    {
+      lead: "Lead 3",
+      status: "Proposal Sent",
+      person: "Mark Zuckerberg",
+      tags: [],
+      source: "LinkedIn",
+      priority: 3,
+      closeDate: "2025-12-01",
+    },
   ];
+
+  // // active filters
+
+  // const activeFilters = {
+  //   agent: sera
+  // }
+
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-purple-100 via-white to-green-100 py-12 px-6">
@@ -13,7 +47,9 @@ const LeadList = () => {
       <div className="max-w-3xl mx-auto flex justify-between items-center mb-10">
         <h2 className="text-4xl font-semibold text-gray-600">Lead List</h2>
 
-           <button className="bg-purple-500 hover:bg-purple-600 cursor-pointer text-white font-medium px-6 py-2 rounded-xl shadow-lg">
+           <button
+           onClick={()=>navigate("/newLead")}
+           className="bg-purple-500 hover:bg-purple-600 cursor-pointer text-white font-medium px-6 py-2 rounded-xl shadow-lg">
           Add New Lead
         </button>
       </div>
@@ -43,7 +79,7 @@ const LeadList = () => {
                   {item.status}
                 </span>
 
-                <span className="text-gray-600 text-right">{item.person}</span>
+                <span className="text-gray-600 text-right font-medium">{item.person}</span>
               </div>
             </div>
           ))}
