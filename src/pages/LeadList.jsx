@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
+import { Plus  } from "lucide-react";
+
 
 const LeadList = () => {
   const navigate = useNavigate();
@@ -47,11 +49,19 @@ const LeadList = () => {
       <div className="max-w-3xl mx-auto flex justify-between items-center mb-10">
         <h2 className="text-4xl font-semibold text-gray-600">Lead List</h2>
 
-           <button
-           onClick={()=>navigate("/newLead")}
-           className="bg-purple-500 hover:bg-purple-600 cursor-pointer text-white font-medium px-6 py-2 rounded-xl shadow-lg">
-          Add New Lead
-        </button>
+            {/* buttons */}
+    <button
+  onClick={() => navigate("/newLead")}
+  className="fixed top-15 right-15
+             bg-white/20 backdrop-blur-lg
+             border border-white/30
+             text-purple-700 p-4 rounded-full
+             shadow-xl cursor-pointer
+             transition-all duration-300
+             hover:bg-purple-400 hover:scale-110"
+>
+  <Plus size={20} />
+</button>
       </div>
 
       {/* Lead Card */}

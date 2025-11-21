@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { UserPlus, PhoneCall, Star,Send ,MailCheck, Archive  } from "lucide-react";
+import { UserPlus, PhoneCall, Star,Send ,MailCheck, Archive ,Plus  } from "lucide-react";
 import axiosInstance from "../api/axiosInstance";
 import axios from "axios";
-
+import { useNavigate } from "react-router";
 const Body = () => {
   const [leads, setleads] = useState([]);
   const [newCount, setNewCount] = useState(0);
@@ -11,6 +11,7 @@ const Body = () => {
   const [qualifiedCount, setQualifiedCount] = useState(0);
   const [proposalCount, setProposalCount] = useState(0);
   const [activeFilter, setActiveFilter] = useState(null);
+  const navigate = useNavigate();
 
 
   useEffect(()=>{
@@ -79,24 +80,39 @@ const Body = () => {
 ];
 
   return (
-    <div className="p-10 w-full min-h-screen bg-linear-to-br from-green-50 via-pink to-purple-100">
+    <div className="p-10 w-full min-h-screen ">
 
       {/* Title */}
       <h2 className="text-center font-bold text-5xl mb-12 text-gray-600 tracking-wide drop-shadow-sm">
         Anvaya CRM Dashboard
       </h2>
 
+
       {/* Lead Buttons */}
       <div className="flex justify-center gap-8 mb-10">
         {  leads.length > 0 ? (
        leads.slice(0,3).map((lead, index) => (
           <button
-            key={index}
-            className="bg-gradient-to-r from-green-500 to-green-600 text-white px-12 py-3 text-lg rounded-2xl
-            shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-          >
-            {lead.name }
-          </button>
+    key={index}
+    className="
+      group relative
+      bg-gradient-to-r from-green-500 to-green-700
+      text-white px-12 py-4 text-lg font-semibold
+      rounded-2xl shadow-xl
+      hover:shadow-2xl hover:scale-105
+      active:scale-95 transition-all duration-300
+      overflow-hidden
+    "
+  >
+    {/* Glow effect */}
+    <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-all duration-300 blur-xl"></span>
+
+    {/* Shine animation */}
+    <span className="absolute left-0 top-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent
+    translate-x-[-150%] group-hover:translate-x-[150%] transition-all duration-700 ease-in-out"></span>
+
+    {lead.name}
+  </button>
         ))
         ):(
           <p className="text-gray-400 text-lg">Loading leads...</p>
@@ -155,11 +171,19 @@ const Body = () => {
       </div>
 
       {/* buttons */}
-       <button
-           onClick={()=>navigate("/newLead")}
-           className="bg-purple-500 hover:bg-purple-600 cursor-pointer text-white font-medium px-6 py-2 rounded-xl shadow-lg">
-          Add New Lead
-        </button>
+    <button
+  onClick={() => navigate("/newLead")}
+  className="fixed top-15 right-15
+             bg-white/20 backdrop-blur-lg
+             border border-white/30
+             text-purple-700 p-4 rounded-full
+             shadow-xl cursor-pointer
+             transition-all duration-300
+             hover:bg-purple-400 hover:scale-110"
+>
+  <Plus size={20} />
+</button>
+
     </div>
   );
 };
