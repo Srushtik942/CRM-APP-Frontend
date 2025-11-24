@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axiosInstance from '../api/axiosInstance';
+import Profile from "../assets/profile.jpg"
+import { useNavigate } from 'react-router';
 
 const SalesAgent = () => {
      const agents = [
@@ -7,6 +10,22 @@ const SalesAgent = () => {
     {image:"https://placehold.co/600x400/000000/FFF?text=profile", name: "Rohan Kumar", email: "rohan@yahoo.com" },
     {image:"https://placehold.co/600x400/000000/FFF?text=profile", name: "Sneha Patil", email: "sneha@gmail.com" },
   ];
+
+  const [agent,setAgent] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+   const fetchAgents = async () =>{
+     try{
+      const response = await axiosInstance.get("/agents");
+       console.log(response);
+      setAgent(response.data.allAgents);
+    }catch(error){
+      console.log("Error",error);
+    }
+   }
+   fetchAgents();
+  },[]);
 
   return (
       <div className="p-6">
@@ -24,12 +43,12 @@ const SalesAgent = () => {
           </thead>
 
           <tbody>
-            {agents.map((agent, index) => (
+            {agent.map((agent, index) => (
               <tr
                 key={index}
                 className="border-b hover:bg-purple-100 transition"
               >
-                <td className="p-3"><img src={agent.image} alt={agent.name} className="w-12 h-12 rounded-full object-cover b"
+                <td className="p-3"><img src={Profile} alt={agent.name} className="w-12 h-12 rounded-full object-cover b"
                 /></td>
                 <td className="p-3">{agent.name}</td>
                 <td className="p-3">{agent.email}</td>
@@ -40,7 +59,9 @@ const SalesAgent = () => {
         </table>
       </div>
       <div>
-        <button className='bg-purple-500 text-2xl font-semibold cursor-pointer mt-10 py-2 px-5 rounded-xl text-white hover:bg-purple-600 mx-100'>Add New Agent</button>
+        <button
+        onClick={()=> navigate("/newLead")}
+        className='bg-purple-500 text-2xl font-semibold cursor-pointer mt-10 py-2 px-5 rounded-xl text-white hover:bg-purple-600 mx-100'>Add New Agent</button>
       </div>
     </div>
   )

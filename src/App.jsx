@@ -6,7 +6,7 @@ import LeadList from "./pages/LeadList";
 import NewLead from "./pages/NewLead";
 import SalesAgent from "./pages/SalesAgent";
 import NewAgent from "./pages/NewAgent";
-import Reports from "./pages/Reports";
+import ReportsPage from "./pages/ReportsPage";
 import SalesAgentView from "./pages/SalesAgentView"
 import LeadStatusView from "./pages/LeadStatusView"
 import "../chartConfig";
@@ -28,21 +28,8 @@ function App() {
             <Route path="/agents" element={<NewAgent/>}/>
             <Route path="/leadStatus" element={<LeadStatusView/>}/>
             <Route path="/salesAgentView" element={<SalesAgentView/>}/>
-            <Route path="/reports" element={<Reports
-      closed={40}
-      pipeline={70}
-      agentData={[
-        { name: "Vicky Kaushal", closed: 10 },
-        { name: "Virat Kohli", closed: 20 },
-        { name: "M.S.Dhoni", closed: 15 }
-      ]}
-      statusData={{
-        "New": 20,
-        "In Progress": 30,
-        "Closed": 40,
-        "Follow-Up": 15
-      }}
-    />}/>
+            <Route path="/lead/:id" element={<LeadManagement/>}/>
+            <Route path="/reports" element={<ReportsPage/>}/>
           </Routes>
         </div>
       </div>

@@ -1,6 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axiosInstance from '../api/axiosInstance';
 
 const NewAgent = () => {
+
+  const [addAgent, setAddAgent] = useState("");
+  const[name,setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleAddAgent = async()=>{
+    try{
+      const response = await axiosInstance.post('/agents',{
+        name,
+        email
+      });
+     console.log("Data",response.data);
+      setName("");
+      setEmail("");
+    }catch(error){
+      console.error("Error to add new agent",error);
+    }
+  }
+
+
   return (
     <div className="max-w-md mx-auto mt-10 bg-white shadow-2xl rounded-2xl p-8">
 
@@ -18,6 +39,8 @@ const NewAgent = () => {
             type="text"
             className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
             placeholder="John Doe"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
 
@@ -28,6 +51,8 @@ const NewAgent = () => {
             type="email"
             className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
             placeholder="john@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -35,7 +60,9 @@ const NewAgent = () => {
 
       {/* Button */}
       <div className="mt-8 text-center">
-        <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-xl shadow-md transition cursor-pointer">
+        <button
+        onClick={handleAddAgent}
+        className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-xl shadow-md transition cursor-pointer">
           Create Agent
         </button>
       </div>

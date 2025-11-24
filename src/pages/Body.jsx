@@ -38,8 +38,6 @@ const Body = () => {
     }
   },[leads]);
 
-
-
  const statusData = [
   {
     title: "New",
@@ -94,6 +92,7 @@ const Body = () => {
        leads.slice(0,3).map((lead, index) => (
           <button
     key={index}
+    onClick={()=> navigate(`/lead/${lead._id}`)}
     className="
       group relative
       bg-gradient-to-r from-green-500 to-green-700
