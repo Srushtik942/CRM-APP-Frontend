@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Plus  } from "lucide-react";
+import axiosInstance from '../api/axiosInstance';
+import Profile from "../assets/profile.jpg"
 
 
 const LeadList = () => {
   const navigate = useNavigate();
+  const [leadList, setLeadList] = React.useState([]);
+
   const leads = [
     {
       lead: "Lead 1",
@@ -35,12 +39,25 @@ const LeadList = () => {
     },
   ];
 
-  // // active filters
-
-  // const activeFilters = {
-  //   agent: sera
-  // }
-
+// fetching lead list
+  useEffect(()=>{
+    try{
+      const fetchLeads = async ()=>{
+        try{
+        const response = await axiosInstance.get("/leads");
+        console.log(response);
+        console.log(response?.data?.leads);
+        setLeadList(response?.data?.leads);
+        }
+        catch(error){
+          console.error(error);
+        }
+      }
+      fetchLeads();
+    }catch(error){
+      console.log("Error in fetching leads",error);
+    }
+  },[]);
 
 
   return (
@@ -72,10 +89,11 @@ const LeadList = () => {
         </h3>
 
         <div className="divide-y divide-gray-200">
-          {leads.map((item, index) => (
+          {leadList.map((item, index) => (
             <div key={index} className="py-4 hover:bg-purple-50 transition-all">
               <div className="grid grid-cols-3 items-center text-lg">
-                <span className="font-semibold text-gray-800">{item.lead}</span>
+
+                <span className="font-semibold text-gray-800">{item.name}</span>
 
                 <span
                   className={`px-5 py-1 rounded-lg text-sm font-medium mx-auto ${
@@ -89,7 +107,7 @@ const LeadList = () => {
                   {item.status}
                 </span>
 
-                <span className="text-gray-600 text-right font-medium">{item.person}</span>
+                <span className="text-gray-600 text-right font-medium">{item.source}</span>
               </div>
             </div>
           ))}
@@ -130,8 +148,6 @@ const LeadList = () => {
   </div>
 
 </div>
-
-
     </div>
   );
 };

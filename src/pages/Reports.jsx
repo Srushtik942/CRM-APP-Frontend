@@ -34,9 +34,10 @@ const statusChartData = {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center hover:shadow-2xl hover:-translate-y-2">
           <h2 className="text-lg font-semibold mb-4">Closed vs Pipeline</h2>
-          <div className="w-full h-80"> {/* h-80 ≈ 320px */}
-           <Pie data={closedPipelineData} options={pieOptions} />
-          </div>
+         <div className="w-full min-h-[320px] relative">
+              <Pie data={closedPipelineData} options={pieOptions} />
+              </div>
+
 
         </div>
 
