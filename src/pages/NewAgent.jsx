@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axiosInstance from '../api/axiosInstance';
+import { toast } from "react-hot-toast";
 
 const NewAgent = () => {
 
@@ -16,6 +17,7 @@ const NewAgent = () => {
      console.log("Data",response.data);
       setName("");
       setEmail("");
+      toast.success("New Agent Created Successfully!");
     }catch(error){
       console.error("Error to add new agent",error);
     }

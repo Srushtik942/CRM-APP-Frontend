@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { Menu, Settings } from "lucide-react";
 
 import Sidebar from "./components/sidebar";
@@ -31,6 +32,8 @@ function App() {
 
         <div className="flex-1 relative">
 
+          <div><Toaster/></div>
+
           {/* Mobile Top Bar with Hamburger */}
           <div className="lg:hidden p-4 flex items-center gap-4 shadow bg-white">
             <button onClick={toggleSidebar}>
@@ -41,6 +44,7 @@ function App() {
 
           {/* Main Content */}
           <div className="p-10 mt-4 lg:mt-0">
+
             <Routes>
               <Route path="/" element={<Body />} />
               <Route path="/lead" element={<LeadManagement />} />

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Plus } from "lucide-react";
 import axiosInstance from '../api/axiosInstance';
+import { toast } from "react-hot-toast";
+
 
 const Settings = () => {
-  const navigate = useNavigate();
 
   const [leadList, setLeadList] = useState([]);
 
@@ -65,7 +64,8 @@ const Settings = () => {
  const handleDeleteLead = async (id) => {
   try {
     await axiosInstance.delete(`/leads/${id}`);
-    alert("Lead deleted successfully!");
+    // alert("Lead deleted successfully!");
+    toast.success('Lead deleted successfully!')
 
     fetchLeads();
   } catch (error) {
