@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Menu, Settings } from "lucide-react";
 
-import Sidebar from "./components/sidebar";
+import Sidebar from "./components/Sidebar";
 import Body from "./pages/Body";
 import LeadManagement from "./pages/LeadManagement";
 import LeadList from "./pages/LeadList";
