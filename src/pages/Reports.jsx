@@ -41,9 +41,9 @@ const statusChartData = {
 
         </div>
 
-        {/* <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center hover:shadow-2xl hover:-translate-y-2">
+        <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col items-center hover:shadow-2xl hover:-translate-y-2">
           <h2 className="text-lg font-semibold mb-4">Leads by Agents</h2>
-          <div style={{ width: "320px", height: "350px" }}>
+          <div style={{ width: "250px", height: "350px" }}>
             <Bar data={agentChartData} options={agentChartOptions} />
           </div>
         </div>
@@ -53,7 +53,7 @@ const statusChartData = {
           <div style={{ width: "320px", height: "320px" }}>
             <Pie data={statusChartData} options={pieOptions} />
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

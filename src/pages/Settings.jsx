@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Plus } from "lucide-react";
 import axiosInstance from '../api/axiosInstance';
 
-const LeadList = () => {
+const Settings = () => {
   const navigate = useNavigate();
 
   const [leadList, setLeadList] = useState([]);
@@ -62,6 +62,18 @@ const LeadList = () => {
     fetchAgents();
   }, []);
 
+ const handleDeleteLead = async (id) => {
+  try {
+    await axiosInstance.delete(`/leads/${id}`);
+    alert("Lead deleted successfully!");
+
+    fetchLeads();
+  } catch (error) {
+    console.error("Error deleting lead", error);
+  }
+};
+
+
   return (
     <div className="min-h-screen bg-linear-to-br from-purple-100 via-white to-green-100
       py-8 px-4 md:px-6 lg:px-10">
@@ -69,16 +81,6 @@ const LeadList = () => {
       {/* Header */}
        <div className="max-w-4xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4 mb-8">
         <h2 className="text-3xl md:text-4xl font-semibold text-gray-600">Lead List</h2>
-
-        {/* Add Button */}
-        <button
-          onClick={() => navigate("/newLead")}
-          className="bg-white/20 backdrop-blur-lg border border-white/30
-          text-purple-700 p-4 rounded-full shadow-xl hover:bg-purple-400
-          hover:scale-110 transition  self-end lg:self-auto"
-        >
-          <Plus size={20} />
-        </button>
       </div>
 
       {/* Lead List */}
@@ -90,7 +92,6 @@ const LeadList = () => {
         <div className="divide-y divide-gray-200">
           {leadList.map((item, index) => (
             <div key={index}
-              onClick={() => navigate(`/lead/${item._id}`)}
             className="py-4 hover:bg-purple-50 transition-all cursor-pointer">
 
               {/* Responsive Grid */}
@@ -113,100 +114,21 @@ const LeadList = () => {
                 </span>
 
                 {/* Source */}
-                <span className="text-gray-600 md:text-right">{item.source}</span>
+                <span className=" md:text-right">
+                    <button
+                      onClick={() => handleDeleteLead(item._id)}
+                    className='bg-red-600 text-white px-4 py-1 rounded-lg text-md cursor-pointer'>Delete</button>
+                </span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Filters + Sort */}
-      <div className="max-w-4xl mx-auto mt-10 space-y-10">
 
-        {/* Filters */}
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Filters:</h3>
-
-          <div className="flex flex-wrap gap-3 md:gap-4 overflow-x-auto pb-2">
-
-            {["High", "Medium", "Low"].map((p) => (
-              <button
-                key={p}
-                onClick={() => setPriorityFilter(p)}
-                className={`px-5 py-2 rounded-full whitespace-nowrap ${
-                  priorityFilter === p
-                    ? "bg-green-600 text-white"
-                    : "bg-green-200 text-green-700"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
-
-            <button
-              onClick={() => setPriorityFilter("")}
-              className="underline text-red-600 whitespace-nowrap"
-            >
-              Clear
-            </button>
-
-            {/* Agent Dropdown */}
-            <select
-              value={agentFilter}
-              onChange={(e) => setAgentFilter(e.target.value)}
-              className="px-4 py-2 rounded-lg bg-purple-200 text-purple-700"
-            >
-              <option value="">All Agents</option>
-              {agents.map((ag) => (
-                <option key={ag._id} value={ag._id}>
-                  {ag.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Sort */}
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Sort By:</h3>
-
-          <div className="flex flex-wrap gap-3 md:gap-4 overflow-x-auto pb-2">
-
-            <button
-              onClick={() => setSortType("priority")}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                sortType === "priority"
-                  ? "bg-green-600 text-white"
-                  : "bg-green-200 text-green-700"
-              }`}
-            >
-              Priority
-            </button>
-
-            <button
-              onClick={() => setSortType("closeDate")}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                sortType === "closeDate"
-                  ? "bg-purple-600 text-white"
-                  : "bg-purple-200 text-purple-700"
-              }`}
-            >
-              Time to Close
-            </button>
-
-            <button
-              onClick={() => setSortType("")}
-              className="underline text-red-600 whitespace-nowrap"
-            >
-              Clear
-            </button>
-
-          </div>
-        </div>
-      </div>
 
     </div>
   );
 };
 
-export default LeadList;
+export default Settings;
