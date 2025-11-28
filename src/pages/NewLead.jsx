@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
+import toast from "react-hot-toast";
 
 const NewLead = () => {
   const [leadName, setLeadName] = useState("");
@@ -65,7 +66,8 @@ const NewLead = () => {
     try {
       const res = await axiosInstance.post("/leads", payload);
       console.log("Lead Created:", res.data);
-      alert("Lead added successfully!");
+      // alert("Lead added successfully!");
+      toast.success("Lead Created Successfully!")
     } catch (err) {
       console.error(err);
       alert("Failed to create lead");
