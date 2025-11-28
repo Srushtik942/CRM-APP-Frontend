@@ -25,7 +25,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen w-full bg-gradient-to-br from-purple-100 via-white to-green-200">
+      <div className="flex min-h-screen w-full bg-linear-to-br from-purple-100 via-white to-green-200">
 
         {/* Sidebar with mobile support */}
         <Sidebar isOpen={isOpen} closeSidebar={closeSidebar} />
