@@ -158,7 +158,7 @@ const LeadManagement = () => {
     )}
   </p>
 
-  {/* Priority */}
+  {/* Priority
   <p className="min-w-0">
     <span className="font-semibold">Priority: </span>
     {editDetails ? (
@@ -172,7 +172,7 @@ const LeadManagement = () => {
     ) : (
       lead.priority
     )}
-  </p>
+  </p> */}
 
   {/* Time to close */}
   <p>

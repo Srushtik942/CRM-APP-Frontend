@@ -35,11 +35,11 @@ function App() {
           <div><Toaster/></div>
 
           {/* Mobile Top Bar with Hamburger */}
-          <div className="lg:hidden p-4 flex items-center gap-4 shadow bg-white">
+          <div className="lg:hidden p-4 flex items-center gap-4 shadow bg-white ">
             <button onClick={toggleSidebar}>
               <Menu size={28} />
             </button>
-            <h1 className="text-xl font-semibold">CRM Dashboard</h1>
+            <h1 className="text-xl font-semibold ">CRM Dashboard</h1>
           </div>
 
           {/* Main Content */}

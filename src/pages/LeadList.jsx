@@ -93,7 +93,7 @@ const LeadList = () => {
             <div className="py-6 text-center text-gray-500 text-lg">
                 No leads found for the selected filters.
                </div>
-                )}
+  )}
 
           {leadList.map((item, index) => (
             <div key={index}
@@ -150,13 +150,6 @@ const LeadList = () => {
               </button>
             ))}
 
-            <button
-              onClick={() => setPriorityFilter("")}
-              className="underline text-red-600 whitespace-nowrap"
-            >
-              Clear
-            </button>
-
             {/* Agent Dropdown */}
             <select
               value={agentFilter}
@@ -170,14 +163,21 @@ const LeadList = () => {
                 </option>
               ))}
             </select>
+
+             <button
+              onClick={() => setPriorityFilter("")}
+              className="underline text-red-600 whitespace-nowrap cursor-pointer"
+            >
+              Clear
+            </button>
           </div>
         </div>
 
         {/* Sort */}
-        <div>
+        {/* <div>
           <h3 className="text-xl font-semibold mb-4">Sort By:</h3>
 
-          <div className="flex flex-wrap gap-3 md:gap-4 overflow-x-auto pb-2">
+          {/* <div className="flex flex-wrap gap-3 md:gap-4 overflow-x-auto pb-2">
 
             <button
               onClick={() => setSortType("priority")}
@@ -188,9 +188,9 @@ const LeadList = () => {
               }`}
             >
               Priority
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               onClick={() => setSortType("closeDate")}
               className={`px-6 py-2 rounded-full whitespace-nowrap ${
                 sortType === "closeDate"
@@ -199,20 +199,20 @@ const LeadList = () => {
               }`}
             >
               Time to Close
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               onClick={() => setSortType("")}
               className="underline text-red-600 whitespace-nowrap"
             >
               Clear
             </button>
 
-          </div>
-        </div>
+          </div> */}
+
       </div>
 
-    </div>
+     </div>
   );
 };
 
