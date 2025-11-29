@@ -1,4 +1,4 @@
-# CRM-APP-Frontend 🧑‍💼
+# CRM-APP-Frontend
 
 A React.js-based frontend for a Customer Relationship Management (CRM) web application — built to manage leads, agents, statuses, priorities, tags, and more.
 
