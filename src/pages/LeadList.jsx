@@ -88,6 +88,13 @@ const LeadList = () => {
         </h3>
 
         <div className="divide-y divide-gray-200">
+
+             {leadList.length === 0 && (
+            <div className="py-6 text-center text-gray-500 text-lg">
+                No leads found for the selected filters.
+               </div>
+                )}
+
           {leadList.map((item, index) => (
             <div key={index}
               onClick={() => navigate(`/lead/${item._id}`)}
