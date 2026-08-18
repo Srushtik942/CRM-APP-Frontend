@@ -1,192 +1,84 @@
-import React, { useEffect, useState } from "react";
-import { UserPlus, PhoneCall, Star,Send ,MailCheck, Archive ,Plus  } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Archive, MailCheck, PhoneCall, Plus, Star, UserPlus } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
-import axios from "axios";
-import { useNavigate } from "react-router";
+
+const statuses = ["New", "Contacted", "Qualified", "Proposal Sent", "Closed"];
 
 const Body = () => {
-  const [leads, setleads] = useState([]);
-  const [newCount, setNewCount] = useState(0);
-  const [contactCount, setContactCount] = useState(0);
-  const [closed, setClosed]= useState(0);
-  const [qualifiedCount, setQualifiedCount] = useState(0);
-  const [proposalCount, setProposalCount] = useState(0);
-  const [activeFilter, setActiveFilter] = useState(null);
-  const navigate = useNavigate();
+  const [leads, setLeads] = useState([]);
+  const [agents, setAgents] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const response = await axiosInstance.get("/leads");
+        setLeads(response.data.leads || []);
+      } catch (error) {
+        console.error("Error fetching leads.", error);
+      }
+    };
+    fetchLeads();
+    const fetchAgents = async () => {
+      try {
+        const response = await axiosInstance.get("/agents");
+        setAgents(response.data.allAgents || []);
+      } catch (error) {
+        console.error("Error fetching agents.", error);
+      }
+    };
+    fetchAgents();
+  }, []);
 
-  useEffect(()=>{
-    const fetchLeads = async()=>{
-     try{
-      const response = await axiosInstance.get("/leads");
-      console.log(response.data.leads);
-      setleads(response.data.leads);
-       }catch(error){
-         console.error("Error fetching leads.",error);
-       }
-    }
-    fetchLeads();
-  },[]);
+  const statusData = useMemo(() => [
+    { title: "New", icon: <UserPlus size={24} />, bg: "bg-lime-100", text: "text-lime-700" },
+    { title: "Contacted", icon: <PhoneCall size={24} />, bg: "bg-green-100", text: "text-green-700" },
+    { title: "Qualified", icon: <Star size={24} />, bg: "bg-emerald-100", text: "text-emerald-700" },
+    { title: "Proposal Sent", icon: <MailCheck size={24} />, bg: "bg-yellow-100", text: "text-yellow-700" },
+    { title: "Closed", icon: <Archive size={24} />, bg: "bg-green-200", text: "text-green-800" },
+  ].map((item) => ({ ...item, value: leads.filter((lead) => lead.status === item.title).length })), [leads]);
 
+  const handleFilterChange = (event) => {
+    const status = event.target.value;
+    setSelectedFilter(status);
+    setSearchParams(status ? {status}:{});
+  };
 
-  useEffect(()=>{
-    if(leads.length > 0){
-    setNewCount(leads.filter(l => l.status === "New").length);
-    setContactCount(leads.filter(l => l.status === "Contacted").length);
-    setQualifiedCount(leads.filter(l => l.status === "Qualified").length);
-    setProposalCount(leads.filter(l => l.status === "Proposal Sent").length);
-    setClosed(leads.filter(l => l.status === "Closed").length);
-    }
-  },[leads]);
+  const filteredLeads = useMemo(
+  () => (selectedFilter ? leads.filter((lead) => lead.status === selectedFilter) : leads),
+  [leads, selectedFilter]
+);
 
- const statusData = [
-  {
-    title: "New",
-    value: newCount,
-    icon: <UserPlus size={30} />,
-    bg: "bg-green-100",
-    text: "text-green-600",
-  },
-  {
-    title: "Contacted",
-    value: contactCount,
-    icon: <PhoneCall size={30} />,
-    bg: "bg-blue-100",
-    text: "text-blue-600",
-  },
-  {
-    title: "Qualified",
-    value: qualifiedCount,
-    icon: <Star size={30} />,
-    bg: "bg-purple-100",
-    text: "text-purple-600",
-  },
-
-  {
-    title: "Proposal Sent",
-    value: proposalCount,
-    icon: <MailCheck size={30} />,
-    bg: "bg-yellow-100",
-    text: "text-yellow-600",
-  },
-  {
-    title: "Closed",
-    value: closed,
-    icon: <Archive size={30} />,
-    bg: "bg-red-100",
-    text: "text-red-600",
-  },
-];
-
-  return (
-    <div className="p-4 md:p-10 lg:p-16 w-full min-h-screen overflow-x-hidden">
-
-      {/* Title */}
-      <h2 className="text-center font-bold text-3xl sm:text-4xl mb-8 text-gray-600 tracking-wide drop-shadow-sm md:text-5xl md:mb-12 xl:text-6xl" >
-        Anvaya CRM Dashboard
-      </h2>
-
-
-      {/* Lead Buttons - Height Reduced */}
-      <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-8 lg:gap-12 mb-10 px-2">
-        {  leads.length > 0 ? (
-       leads.slice(0,3).map((lead, index) => (
-          <button
-    key={index}
-    onClick={()=> navigate(`/lead/${lead._id}`)}
-    className="
-      group relative
-  bg-gradient-to-r from-green-500 to-green-700
-  text-white px-6 py-1 text-sm sm:px-8 sm:py-2 md:px-12 md:py-2 md:text-base
-  rounded-2xl shadow-xl
-  hover:shadow-2xl hover:scale-105
-  active:scale-95 transition-all duration-300
-  overflow-hidden
-    "
-  >
-    {/* Glow effect */}
-    <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-all duration-300 blur-xl"></span>
-
-    {/* Shine animation */}
-    <span className="absolute left-0 top-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent
-    translate-x-[-150%] group-hover:translate-x-[150%] transition-all duration-700 ease-in-out"></span>
-
-    {lead.name}
-  </button>
-        ))
-        ):(
-          <p className="text-gray-400 text-lg">Loading leads...</p>
-        )
-      }
-      </div>
-
-      {/* Lead Status Section */}
-      <div className="mt-14">
-        <h2 className="text-center font-semibold text-3xl mb-10 text-gray-600">
-          Lead Status
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 md:gap-10 max-w-7xl mx-auto px-4">
-
-          {statusData.map((item, i) => (
-            <div
-  key={i}
-  className="backdrop-blur-xl bg-white/70 shadow-lg p-6 rounded-2xl border border-white/40
-  hover:-translate-y-1 hover:shadow-xl transition-all duration-200 text-center"
->
-              <div
-                className={`mx-auto ${item.bg} ${item.text}
-                w-12 h-12 flex items-center justify-center rounded-full shadow-sm mb-4`}
-              >
-                {item.icon}
-              </div>
-
-              <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
-              <p className={`${item.text} text-3xl font-bold mt-1`}>
-                {item.value}
-              </p>
-            </div>
-          ))}
-
-        </div>
-      </div>
-
-      {/* Quick Filters */}
-      <div className="mt-20 text-center">
-        <h3 className="text-2xl font-semibold mb-6 text-gray-600">Quick Filters</h3>
-
-        <div className="flex justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 flex-wrap px-2">
-          {["New", "Contacted", "Qualified", "Proposal Sent", "Closed"].map((filter, i) => (
-            <button
-              key={i}
-              onClick={() => navigate(`/status?status=${filter}`)}
-              className="px-4 py-2 text-sm sm:text-base md:px-8 md:py-3
-              lg:px-10 lg:py-4
-              rounded-xl bg-white/70
-shadow-md hover:bg-green-500 hover:text-white
-transition-all duration-300 text-gray-700"
-            >
-              {filter}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Floating Action Button (FAB) - ENFORCED SQUARE AND CIRCULAR */}
-    <button
-  onClick={() => navigate("/newLead")}
-  className="fixed bottom-6 right-6 md:top-12 md:right-12 z-50
-bg-white/20 backdrop-blur-lg border border-white/30
-// 👇 Ensured the element is a perfect square (w-12 h-12) and centered
-w-12 h-12 flex items-center justify-center
-text-purple-700 rounded-full shadow-xl
-transition-all duration-300 hover:bg-purple-400 hover:scale-110"
->
-  <Plus size={18} />
-</button>
-
-    </div>
-  );
+  return (
+    <main className="min-h-screen w-full overflow-x-hidden bg-white p-4 text-green-950 sm:p-6 lg:p-10">
+      <style>{`@keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+      <section className="mx-auto mb-10 max-w-7xl">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-2xl font-bold text-green-900">Lead Status</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {statusData.map((item, index) => <div key={item.title} style={{ animationDelay: `${index * 70}ms` }} className="animate-[fadeInUp_0.5s_ease-out_both] rounded-xl border border-green-100 bg-lime-50 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"><div className={`mb-4 flex h-11 w-11 items-center justify-center rounded-full ${item.bg} ${item.text}`}>{item.icon}</div><h3 className="text-base font-semibold text-green-900">{item.title}</h3><p className={`mt-1 text-3xl font-bold ${item.text}`}>{item.value}</p></div>)}
+        </div>
+      </section>
+      <section className="mx-auto mb-10 grid max-w-7xl grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-green-100 bg-lime-50 p-5 shadow-sm">
+          <h2 className="mb-4 text-2xl font-bold text-green-900">Leads</h2>
+          <div className="space-y-3">{leads.slice(0, 5).map((lead) => <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="flex w-full items-center justify-between rounded-lg bg-white p-4 text-left shadow-sm transition hover:translate-x-1 hover:shadow-md"><span className="font-semibold text-green-900">{lead.name}</span><span className="text-sm text-green-700">{lead.status}</span></button>)}</div>
+        </div>
+        <div className="rounded-xl border border-green-100 bg-lime-50 p-5 shadow-sm">
+          <div className="mb-4 flex items-center justify-between"><h2 className="text-2xl font-bold text-green-900">Top Agents</h2><button onClick={() => navigate("/sales")} className="text-sm font-semibold text-green-700 hover:text-green-900">View all agents →</button></div>
+          <div className="space-y-3">{agents.slice(0, 3).map((agent, index) => <div key={agent._id || index} className="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm transition hover:translate-x-1 hover:shadow-md"><span className="font-semibold text-green-900">{agent.name}</span><span className="text-sm text-green-700">{agent.email}</span></div>)}</div>
+        </div>
+      </section>
+      <section className="mx-auto max-w-7xl"><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><h2 className="text-2xl font-bold text-green-900">All Leads</h2><label className="flex items-center gap-3 text-sm font-semibold text-green-800">Quick Filter<select value={selectedFilter} onChange={handleFilterChange} className="rounded-lg border border-green-200 bg-lime-50 px-3 py-2 text-green-900 outline-none focus:ring-2 focus:ring-green-600"><option value="">Select status</option>{statuses.map((status) => <option key={status} value={status}>{status}</option>)}</select></label></div>
+        {filteredLeads.length === 0 ? <p className="rounded-xl border border-dashed border-green-200 p-8 text-center text-green-700">No leads available.</p> : <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">{filteredLeads.map((lead) => <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="rounded-xl border border-green-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-green-300 hover:shadow-md"><div className="flex items-start justify-between gap-3"><h3 className="text-lg font-bold text-green-900">{lead.name}</h3><span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold text-green-800">{lead.status}</span></div><p className="mt-3 text-sm text-green-700">{lead.email || "No email provided"}</p><p className="mt-1 text-sm text-green-700">{lead.phone || "No phone provided"}</p></button>)}</div>}
+      </section>
+      <button onClick={() => navigate("/newLead")} aria-label="Add new lead" className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-green-800 text-white shadow-lg transition hover:scale-105 hover:bg-green-700"><Plus size={20} /></button>
+    </main>
+  );
 };
 
 export default Body;

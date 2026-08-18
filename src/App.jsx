@@ -3,6 +3,9 @@ import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Menu, Settings } from "lucide-react";
 
+
+import Signup from "./pages/Signup"
+import Login from "./pages/Login";
 import Sidebar from "./components/Sidebar";
 import Body from "./pages/Body";
 import LeadManagement from "./pages/LeadManagement";
@@ -25,7 +28,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen w-full bg-linear-to-br from-purple-100 via-white to-green-200">
+      <div className="flex min-h-screen w-full bg-white">
 
         {/* Sidebar with mobile support */}
         <Sidebar isOpen={isOpen} closeSidebar={closeSidebar} />
@@ -35,17 +38,19 @@ function App() {
           <div><Toaster/></div>
 
           {/* Mobile Top Bar with Hamburger */}
-          <div className="lg:hidden p-4 flex items-center gap-4 shadow bg-white ">
+          <div className="lg:hidden flex items-center gap-4 border-b border-blue-100 bg-white p-4 shadow-sm">
             <button onClick={toggleSidebar}>
               <Menu size={28} />
             </button>
-            <h1 className="text-xl font-semibold ">CRM Dashboard</h1>
+            <h1 className="text-xl font-semibold text-blue-600">CRM Dashboard</h1>
           </div>
 
           {/* Main Content */}
           <div className="p-10 mt-4 lg:mt-0">
 
             <Routes>
+              <Route path="/signup" element={<Signup/>}/>
+              <Route path="/login" element={<Login/>}/>
               <Route path="/" element={<Body />} />
               <Route path="/lead" element={<LeadManagement />} />
               <Route path="/leadList" element={<LeadList />} />

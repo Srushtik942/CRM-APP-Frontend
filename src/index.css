@@ -65,3 +65,54 @@ button {
 /* @tailwind base;
 @tailwind components; */
 @tailwind utilities;
+
+/* Shared professional blue-and-white theme */
+body,
+#root {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #2563eb;
+}
+
+[class*="bg-linear-to-br"],
+[class*="bg-gradient-to-br"] {
+  background-image: none !important;
+  background-color: #ffffff !important;
+}
+
+.text-black,
+[class*="text-gray-"] {
+  color: #2563eb !important;
+}
+
+.bg-purple-50,
+.bg-purple-100,
+.bg-green-50,
+.bg-green-100,
+.bg-gray-100 {
+  background-color: #eff6ff !important;
+}
+
+.text-purple-600,
+.text-purple-700,
+.text-green-600,
+.text-green-700 {
+  color: #2563eb !important;
+}
+
+.bg-purple-600,
+.bg-green-500,
+.bg-green-600 {
+  background-color: #2563eb !important;
+}
+
+.hover\:bg-purple-700:hover,
+.hover\:bg-green-600:hover,
+.hover\:bg-green-700:hover {
+  background-color: #1d4ed8 !important;
+}
+
+[class*="border-gray-"],
+[class*="border-white/"] {
+  border-color: #bfdbfe !important;
+}
