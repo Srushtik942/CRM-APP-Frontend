@@ -130,7 +130,7 @@ const Body = () => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredLeads.map((lead) => <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="rounded-xl border border-green-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-green-300 hover:shadow-md"><div className="flex items-start justify-between gap-3"><h3 className="text-lg font-bold text-green-900">{lead.name}</h3><span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold text-green-800">{lead.status}</span></div><p className="mt-3 text-sm text-green-700">{lead.email || "No email provided"}</p><p className="mt-1 text-sm text-green-700">{lead.phone || "No phone provided"}</p></button>)}</div>)}
       </section>
-      <button onClick={() => navigate("/newLead")} aria-label="Add new lead" className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-green-800 text-white shadow-lg transition hover:scale-105 hover:bg-green-700"><Plus size={20} /></button>
+      <button onClick={() => navigate("/newLead")} aria-label="Add new lead" className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-green-800 text-white shadow-lg transition hover:scale-105 hover:bg-green-900"><Plus size={20} /></button>
     </main>
   );
 };

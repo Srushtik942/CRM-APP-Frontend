@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { Fragment } from "react";
+import { Combobox, Transition } from "@headlessui/react";
+import { Check, ChevronDown, X } from "lucide-react";
 import axiosInstance from "../api/axiosInstance";
 import toast from "react-hot-toast";
 
@@ -9,8 +12,9 @@ const NewLead = () => {
   const [priority, setPriority] = useState("");
   const [time, setTime] = useState("");
   const [agentsList, setAgentsList] = useState([]);
-  const [salesAgents, setSalesAgents] = useState([]);
+  const [salesAgent, setSalesAgent] = useState("");
   const [tags, setTags] = useState([]);
+  const [agentQuery, setAgentQuery] = useState("");
 
   // fetch agents
 
@@ -28,17 +32,6 @@ const NewLead = () => {
     fetchAgents();
   },[]);
 
-  // Handle Sales Agents (checkbox group)
-  const handleSalesAgents = (e) => {
-    const id = e.target.value;
-
-    setSalesAgents((prev) =>
-      prev.includes(id)
-        ? prev.filter((v) => v !== id)
-        : [...prev, id]
-    );
-  };
-
   // Handle tags (checkbox group)
   const handleTagChange = (e) => {
     const value = e.target.value;
@@ -50,14 +43,16 @@ const NewLead = () => {
     );
   };
 
-  const handleAddLead = async () => {
+  const handleAddLead = async (event) => {
+    event.preventDefault();
+
     const payload = {
       name: leadName,
       source,
       status,
       priority,
       timeToClose: Number(time),
-      salesAgent: salesAgents,
+      salesAgent,
       tags,
     };
 
@@ -66,7 +61,6 @@ const NewLead = () => {
     try {
       const res = await axiosInstance.post("/leads", payload);
       console.log("Lead Created:", res.data);
-      // alert("Lead added successfully!");
       toast.success("Lead Created Successfully!")
     } catch (err) {
       console.error(err);
@@ -75,30 +69,34 @@ const NewLead = () => {
   };
 
   return (
-    <div className="bg-white py-10 px-6 shadow-2xl max-w-lg mx-auto rounded-lg">
-      <h2 className="text-3xl font-semibold text-center">Add New Lead</h2>
+    <form
+      onSubmit={handleAddLead}
+      className="max-w-3xl mx-auto rounded-2xl  p-4 sm:p-6"
+    >
+      <div className="rounded-xl bg-lime-100 p-5 shadow-xl sm:p-7">
+      <h2 className="text-2xl font-bold text-center text-green-800">Add New Lead</h2>
 
-      <div className="mt-10 flex flex-col gap-6">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
 
         {/* Lead Name */}
         <div className="flex flex-col">
-          <label className="font-semibold text-lg">Lead Name:</label>
+          <label className="font-semibold text-sm text-green-800">Lead Name</label>
           <input
             type="text"
             value={leadName}
             onChange={(e) => setLeadName(e.target.value)}
-            className="border border-gray-400 rounded-md px-3 py-2"
+            className="mt-1 rounded-md border border-green-300 bg-green-50 px-3 py-2 text-green-900 outline-none transition placeholder:text-green-600/60 focus:border-green-500 focus:ring-2 focus:ring-green-100"
             placeholder="John Doe"
           />
         </div>
 
         {/* Lead Source */}
         <div className="flex flex-col">
-          <label className="font-semibold text-lg">Lead Source:</label>
+          <label className="font-semibold text-sm text-green-800">Lead Source</label>
           <select
             value={source}
             onChange={(e) => setSource(e.target.value)}
-            className="border border-gray-400 rounded-md px-3 py-2"
+            className="mt-1 rounded-md border border-green-300 bg-green-50 px-3 py-2 text-green-900 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
           >
             <option value="">Select Source</option>
             <option value="Website">Website</option>
@@ -111,36 +109,34 @@ const NewLead = () => {
           </select>
         </div>
 
-        {/* Sales Agent */}
-        <div className="flex flex-col">
-          <label className="font-semibold text-lg">Sales Agent:</label>
-
-          <div className="flex flex-col gap-2 mt-2">
-            {agentsList.length === 0 ? (
-              <p>Loading...</p>
-            ):(
-
-            agentsList.map((agent) => (
-              <label key={agent._id} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                   value={agent._id}
-                  onChange={handleSalesAgents}
-                />
-                {agent.name}
-              </label>
-            ))
-          )}
-          </div>
-        </div>
+  {/* Sales Agent */}
+<div className="flex flex-col">
+  <label className="font-semibold text-sm text-green-800">Sales Agent</label>
+  <select
+    value={salesAgent}
+    onChange={(e) => setSalesAgent(e.target.value)}
+    className="mt-1 rounded-md border border-green-300 bg-green-50 px-3 py-2 text-green-900 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
+  >
+    <option value="">Select Agent</option>
+    {agentsList.length === 0 ? (
+      <option disabled>Loading agents...</option>
+    ) : (
+      agentsList.map((agent) => (
+        <option key={agent._id} value={agent._id}>
+          {agent.name}
+        </option>
+      ))
+    )}
+  </select>
+</div>
 
         {/* Lead Status */}
         <div className="flex flex-col">
-          <label className="font-semibold text-lg">Lead Status:</label>
+          <label className="font-semibold text-sm text-green-800">Lead Status</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="border border-gray-400 rounded-md px-3 py-2"
+            className="mt-1 rounded-md border border-green-300 bg-green-50 px-3 py-2 text-green-900 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
           >
             <option value="">Select Status</option>
             <option value="New">New</option>
@@ -155,11 +151,11 @@ const NewLead = () => {
 
         {/* Priority */}
         <div className="flex flex-col">
-          <label className="font-semibold text-lg">Priority:</label>
+          <label className="font-semibold text-sm text-green-800">Priority</label>
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="border border-gray-400 rounded-md px-3 py-2"
+            className="mt-1 rounded-md border border-green-300 bg-green-50 px-3 py-2 text-green-900 outline-none transition focus:border-green-500 focus:ring-2 focus:ring-green-100"
           >
             <option value="">Select Priority</option>
             <option value="High">High</option>
@@ -170,23 +166,24 @@ const NewLead = () => {
 
         {/* Time */}
         <div className="flex flex-col">
-          <label className="font-semibold text-lg">Time to Close (Days):</label>
+          <label className="font-semibold text-sm text-green-800">Time to Close (Days)</label>
           <input
             type="number"
+            min="0"
             value={time}
-            onChange={(e) => setTime(e.target.value)}
-            className="border border-gray-400 rounded-md px-3 py-2"
+            onChange={(e) => setTime(e.target.value === "" ? "" : Math.max(0, Number(e.target.value)))}
+            className="mt-1 rounded-md border border-green-300 bg-green-50 px-3 py-2 text-green-900 outline-none transition placeholder:text-green-600/60 focus:border-green-500 focus:ring-2 focus:ring-green-100"
             placeholder="e.g. 10"
           />
         </div>
 
         {/* Tags */}
-        <div className="flex flex-col">
-          <label className="font-semibold text-lg">Tags:</label>
+        <div className="flex flex-col sm:col-span-2">
+          <label className="font-semibold text-sm text-green-800">Tags</label>
 
-          <div className="flex flex-col gap-2 mt-2">
+          <div className="mt-2 flex flex-wrap gap-4">
             {["important", "follow-up", "new"].map((tag) => (
-              <label key={tag} className="flex items-center gap-2">
+              <label key={tag} className="flex items-center gap-2 text-sm text-green-800">
                 <input type="checkbox" value={tag} onChange={handleTagChange} />
                 {tag.charAt(0).toUpperCase() + tag.slice(1)}
               </label>
@@ -196,13 +193,14 @@ const NewLead = () => {
 
         {/* Button */}
         <button
-          onClick={handleAddLead}
-          className="bg-purple-600 text-white py-3 rounded-md text-lg font-semibold hover:bg-purple-700 transition cursor-pointer"
+          type="submit"
+          className="sm:col-span-2 mt-2 rounded-md bg-green-700 py-2.5 text-base font-semibold text-white transition hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 cursor-pointer"
         >
           Create Lead
         </button>
       </div>
-    </div>
+      </div>
+    </form>
   );
 };
 
