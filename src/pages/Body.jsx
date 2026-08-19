@@ -97,7 +97,7 @@ const Body = () => {
               <div className="h-4 w-16 rounded bg-green-100"/>
             </div>
             )):
-          leads.slice(0, 5).map((lead) =>( <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="flex w-full items-center justify-between rounded-lg bg-white p-4 text-left shadow-sm transition hover:translate-x-1 hover:shadow-md"><span className="font-semibold text-green-900">{lead.name}</span><span className="text-sm text-green-700">{lead.status}</span></button>)
+          leads.slice(0, 3).map((lead) =>( <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="flex w-full items-center justify-between rounded-lg bg-white p-4 text-left shadow-sm transition hover:translate-x-1 hover:shadow-md"><span className="font-semibold text-green-900">{lead.name}</span><span className="text-sm text-green-700">{lead.status}</span></button>)
 
           )}</div>
         </div>
