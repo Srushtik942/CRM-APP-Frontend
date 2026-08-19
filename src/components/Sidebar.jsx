@@ -16,9 +16,9 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   return (
     <>
-      {isOpen && <div onClick={closeSidebar} className="fixed inset-0 z-40 bg-green-950/20 backdrop-blur-sm lg:hidden" />}
-      <aside className={`fixed left-0 top-0 z-50 h-screen w-60 transform rounded-r-xl bg-green-950 p-6 shadow-xl transition-transform duration-300 lg:static lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="mb-10 border-b border-green-800 pb-5"><Link to="/" onClick={closeSidebar} className="text-2xl font-bold text-yellow-300 transition hover:text-yellow-200">Clientix</Link><p className="mt-1 text-xs uppercase tracking-widest text-green-300">CRM workspace</p></div>
+      {isOpen && <div onClick={closeSidebar} className=" z-40 bg-green-950/20 backdrop-blur-sm lg:hidden" />}
+      <aside className={`fixed left-0 top-0 z-50 h-auto w-60 transform rounded-r-sm bg-green-950 p-6 shadow-xl transition-transform duration-300 lg:static lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="mb-10 border-b border-green-800 pb-5"><Link to="/" onClick={closeSidebar} className="text-2xl font-bold text-yellow-300 transition hover:text-yellow-200">Clientix</Link><p className="mt-3 text-xs uppercase tracking-widest text-green-300">CRM workspace</p></div>
         <ul className="space-y-3">
           {menu.map((item) => {
             const isActive = location.pathname === item.path;
