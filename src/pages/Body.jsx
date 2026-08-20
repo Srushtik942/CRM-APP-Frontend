@@ -22,7 +22,7 @@ const Body = () => {
     const fetchLeads = async () => {
       setLeadsLoading(true);
       try {
-        const params = { page: currentPage, limit: itemsPerPage };
+        const params = { page: currentPage + 1, limit: itemsPerPage };
         if (selectedFilter) params.status = selectedFilter;
         const response = await axiosInstance.get("/leads",{params});
         setLeads(response.data.leads || []);
