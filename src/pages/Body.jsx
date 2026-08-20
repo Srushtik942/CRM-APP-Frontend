@@ -10,17 +10,23 @@ const Body = () => {
   const [leads, setLeads] = useState([]);
   const [agents, setAgents] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState("");
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const [leadsLoading, setLeadsLoading] = useState(true);
   const [agentLoading, setAgentLoading] = useState(true);
+  const [itemsPerPage, setItemsPerPage]= useState(6);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLeads = async () => {
       setLeadsLoading(true);
       try {
-        const response = await axiosInstance.get("/leads");
+        const params = { page: currentPage, limit: itemsPerPage };
+        if (selectedFilter) params.status = selectedFilter;
+        const response = await axiosInstance.get("/leads",{params});
         setLeads(response.data.leads || []);
+        setTotalItems(response.data.count || 0);
       } catch (error) {
         console.error("Error fetching leads.", error);
       }finally{
@@ -42,7 +48,13 @@ const Body = () => {
       }
     };
     fetchAgents();
-  }, []);
+  }, [currentPage, itemsPerPage, selectedFilter]);
+
+
+  // pagination
+
+  const numOfPages = Math.ceil(totalItems/itemsPerPage);
+  const pages = [...Array(numOfPages).keys()]
 
 
   const statusData = useMemo(() => [
@@ -57,12 +69,33 @@ const Body = () => {
     const status = event.target.value;
     setSelectedFilter(status);
     setSearchParams(status ? {status}:{});
+    setCurrentPage(0);
   };
 
-  const filteredLeads = useMemo(
-  () => (selectedFilter ? leads.filter((lead) => lead.status === selectedFilter) : leads),
-  [leads, selectedFilter]
-);
+  const handleItemsPerPage = (e) => {
+  const value = parseInt(e.target.value);
+  setItemsPerPage(value);
+  setCurrentPage(0);
+};
+
+const HandlePreviousBtn=()=>{
+  if(currentPage > 0){
+    setCurrentPage(currentPage - 1)
+  }
+}
+
+
+const HandleNextBtn = ()=>{
+  if(currentPage< pages.length-1){
+    setCurrentPage(currentPage + 1)
+    console.log(currentPage)
+  }
+}
+
+//   const leads = useMemo(
+//   () => (selectedFilter ? leads.filter((lead) => lead.status === selectedFilter) : leads),
+//   [leads, selectedFilter]
+// );
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-white p-4 text-green-950 sm:p-6 lg:p-10">
@@ -124,13 +157,54 @@ const Body = () => {
       />
     </div>
 
-         ): filteredLeads.length === 0 ?(
+         ): leads.length === 0 ?(
         <p className="rounded-xl border border-dashed border-green-200 p-8 text-center text-green-700">No leads available.</p> ):
         (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredLeads.map((lead) => <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="rounded-xl border border-green-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-green-300 hover:shadow-md"><div className="flex items-start justify-between gap-3"><h3 className="text-lg font-bold text-green-900">{lead.name}</h3><span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold text-green-800">{lead.status}</span></div><p className="mt-3 text-sm text-green-700">{lead.email || "No email provided"}</p><p className="mt-1 text-sm text-green-700">{lead.phone || "No phone provided"}</p></button>)}</div>)}
+          {leads.map((lead) => <button key={lead._id} onClick={() => navigate(`/lead/${lead._id}`)} className="rounded-xl border border-green-100 bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-green-300 hover:shadow-md"><div className="flex items-start justify-between gap-3"><h3 className="text-lg font-bold text-green-900">{lead.name}</h3><span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-semibold text-green-800">{lead.status}</span></div><p className="mt-3 text-sm text-green-700">{lead.email || "No email provided"}</p><p className="mt-1 text-sm text-green-700">{lead.phone || "No phone provided"}</p></button>)}</div>)}
       </section>
       <button onClick={() => navigate("/newLead")} aria-label="Add new lead" className="fixed bottom-6 right-6 flex h-12 w-12 items-center justify-center rounded-full bg-green-800 text-white shadow-lg transition hover:scale-105 hover:bg-green-900"><Plus size={20} /></button>
+      {numOfPages > 0 && (
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-2 rounded-xl border border-lime-200 bg-lime-100 p-3">
+        <button
+          type="button"
+          onClick={HandlePreviousBtn}
+          disabled={currentPage === 0}
+          className="rounded-lg bg-lime-200 px-3 py-2 text-sm font-semibold text-green-800 transition hover:bg-lime-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Previous
+        </button>
+        {pages.map((page) => (
+          <button
+            key={page}
+            type="button"
+            onClick={() => setCurrentPage(page)}
+            aria-current={currentPage === page ? "page" : undefined}
+            className={`h-9 min-w-9 rounded-lg px-3 text-sm font-bold transition ${currentPage === page ? "bg-green-800 text-lime-100" : "bg-lime-200 text-green-800 hover:bg-lime-300"}`}
+          >
+            {page + 1}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={HandleNextBtn}
+          disabled={currentPage === pages.length - 1}
+          className="rounded-lg bg-lime-200 px-3 py-2 text-sm font-semibold text-green-800 transition hover:bg-lime-300 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Next
+        </button>
+        <label className="ml-2 flex items-center gap-2 text-sm font-semibold text-green-800">
+          Per page
+          <select onChange={handleItemsPerPage} value={itemsPerPage} className="rounded-lg border border-lime-300 bg-lime-50 px-3 py-2 text-green-800 outline-none focus:ring-2 focus:ring-green-600">
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="30">30</option>
+  <option value="50">50</option>
+</select>
+        </label>
+      </div>
+      )}
     </main>
   );
 };
