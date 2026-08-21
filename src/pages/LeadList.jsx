@@ -14,6 +14,7 @@ const LeadList = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [sourceFilter, setSourceFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // Sorting
   const [sortType, setSortType] = useState("");
@@ -35,12 +36,15 @@ const LeadList = () => {
   };
 
   const fetchLeads = async () => {
+    setIsLoading(true);
     try {
       const query = dynamicQuery();
       const res = await axiosInstance.get(`/leads?${query}`);
       setLeadList(res.data.leads || []);
     } catch (error) {
       console.error("Failed to fetch leads", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,88 +66,46 @@ const LeadList = () => {
     fetchAgents();
   }, []);
 
+  const clearFilters = () => {
+    setPriorityFilter("");
+    setAgentFilter("");
+    setStatusFilter("");
+    setSourceFilter("");
+    setTagFilter("");
+    setSortType("");
+  };
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-100 via-white to-green-100
+    <div className="mb-[5px] min-h-screen bg-linear-to-br from-purple-100 via-white to-green-100
       py-8 px-4 md:px-6 lg:px-10">
 
       {/* Header */}
-       <div className="max-w-4xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4 mb-8">
-        <h2 className="text-3xl md:text-4xl font-semibold text-gray-600">Lead List</h2>
-
-        {/* Add Button */}
+      <div className="max-w-5xl mx-auto flex justify-end mb-8">
         <button
           onClick={() => navigate("/newLead")}
-          className="bg-white/20 backdrop-blur-lg border border-white/30
-          text-purple-700 p-4 rounded-full shadow-xl hover:bg-purple-400
-          hover:scale-110 transition  self-end lg:self-auto"
+          aria-label="Add new lead"
+          className="fixed bottom-5 right-5 z-10 bg-green-800 border border-green-800 p-3 text-white rounded-full shadow-sm
+          hover:bg-green-900 hover:border-green-900 hover:shadow-md transition self-end lg:self-auto"
         >
           <Plus size={20} />
         </button>
       </div>
 
-      {/* Lead List */}
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8">
-        <h3 className="text-2xl md:text-3xl text-center mb-6 text-gray-600">
-          Lead Overview
-        </h3>
+      <h2 className="max-w-5xl mx-auto mb-4 text-3xl font-bold text-green-900">Lead List</h2>
 
-        <div className="divide-y divide-gray-200">
+      <div className="max-w-5xl mx-auto mb-6 rounded-xl border border-lime-200 bg-white p-5 text-green-900 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <h4 className="text-lg font-semibold">Filters</h4>
 
-             {leadList.length === 0 && (
-            <div className="py-6 text-center text-gray-500 text-lg">
-                No leads found for the selected filters.
-               </div>
-  )}
-
-          {leadList.map((item, index) => (
-            <div key={index}
-              onClick={() => navigate(`/lead/${item._id}`)}
-            className="py-4 hover:bg-purple-50 transition-all cursor-pointer">
-
-              {/* Responsive Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-2 text-lg">
-
-                {/* Lead Name */}
-                <span className="font-semibold">{item.name}</span>
-
-                {/* Status */}
-                <span
-                  className={`px-4 py-1 rounded-lg text-sm md:mx-auto w-fit ${
-                    item.status === "New"
-                      ? "bg-green-100 text-green-700"
-                      : item.status === "Qualified"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-purple-100 text-purple-700"
-                  }`}
-                >
-                  {item.status}
-                </span>
-
-                {/* Source */}
-                <span className="text-gray-600 md:text-right">{item.source}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Filters + Sort */}
-      <div className="max-w-4xl mx-auto mt-10 space-y-10">
-
-        {/* Filters */}
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Filters:</h3>
-
-          <div className="flex flex-wrap gap-3 md:gap-4 overflow-x-auto pb-2">
-
+          <div className="flex flex-wrap items-center gap-2 md:gap-3">
             {["High", "Medium", "Low"].map((p) => (
               <button
                 key={p}
                 onClick={() => setPriorityFilter(p)}
-                className={`px-5 py-2 rounded-full whitespace-nowrap ${
+                className={`rounded-xl border px-4 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                   priorityFilter === p
-                    ? "bg-green-600 text-white"
-                    : "bg-green-200 text-green-700"
+                    ? "border-green-800 bg-green-800 text-white"
+                    : "border-lime-300 bg-lime-100 text-green-900 hover:bg-lime-200"
                 }`}
               >
                 {p}
@@ -154,7 +116,7 @@ const LeadList = () => {
             <select
               value={agentFilter}
               onChange={(e) => setAgentFilter(e.target.value)}
-              className="px-4 py-2 rounded-lg bg-purple-200 text-purple-700"
+              className="rounded-xl border border-lime-300 bg-white px-4 py-2 text-sm text-green-900 outline-none focus:border-green-700"
             >
               <option value="">All Agents</option>
               {agents.map((ag) => (
@@ -164,55 +126,69 @@ const LeadList = () => {
               ))}
             </select>
 
-             <button
-              onClick={() => setPriorityFilter("")}
-              className="underline text-red-600 whitespace-nowrap cursor-pointer"
+            {/* Clear filters — beside the filters */}
+            <button
+              onClick={clearFilters}
+              className="rounded-xl border border-lime-300 bg-lime-100 px-4 py-2 text-sm font-medium text-green-900 whitespace-nowrap cursor-pointer hover:bg-lime-200 transition-colors"
             >
-              Clear
+              Clear filters
             </button>
           </div>
         </div>
-
-        {/* Sort */}
-        {/* <div>
-          <h3 className="text-xl font-semibold mb-4">Sort By:</h3>
-
-          {/* <div className="flex flex-wrap gap-3 md:gap-4 overflow-x-auto pb-2">
-
-            <button
-              onClick={() => setSortType("priority")}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                sortType === "priority"
-                  ? "bg-green-600 text-white"
-                  : "bg-green-200 text-green-700"
-              }`}
-            >
-              Priority
-            </button> */}
-
-            {/* <button
-              onClick={() => setSortType("closeDate")}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                sortType === "closeDate"
-                  ? "bg-purple-600 text-white"
-                  : "bg-purple-200 text-purple-700"
-              }`}
-            >
-              Time to Close
-            </button> */}
-
-            {/* <button
-              onClick={() => setSortType("")}
-              className="underline text-red-600 whitespace-nowrap"
-            >
-              Clear
-            </button>
-
-          </div> */}
-
       </div>
 
-     </div>
+      {/* Lead Overview */}
+      <div className="max-w-5xl mx-auto overflow-hidden rounded-xl border border-lime-200 bg-lime-50 text-green-900 shadow-sm">
+        {/* <div className="border-b border-lime-200 px-6 py-5">
+          <h3 className="text-2xl font-bold">Lead Overview</h3>
+        </div> */}
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <thead className="bg-lime-100">
+              <tr className="border-b border-lime-200 text-green-900">
+                <th className="px-6 py-3 font-semibold uppercase tracking-wide">Name</th>
+                <th className="px-6 py-3 font-semibold uppercase tracking-wide">Status</th>
+                <th className="px-6 py-3 font-semibold uppercase tracking-wide">Source</th>
+                <th className="px-6 py-3 font-semibold uppercase tracking-wide">Agent</th>
+                <th className="px-6 py-3 font-semibold uppercase tracking-wide">Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <tr>
+                  <td colSpan="5" className="bg-lime-100 px-6 py-10 text-center">
+                    <div className="inline-flex items-center gap-3 font-medium text-green-900" role="status">
+                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-green-900 border-t-transparent" />
+                      Loading lead information...
+                    </div>
+                  </td>
+                </tr>
+              ) : leadList.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-10 text-center text-green-900">
+                    No leads found for the selected filters.
+                  </td>
+                </tr>
+              ) : leadList.map((item) => (
+                <tr
+                  key={item._id}
+                  onClick={() => navigate(`/lead/${item._id}`)}
+                  className="border-b border-lime-100 transition-colors hover:bg-lime-100 cursor-pointer last:border-b-0"
+                >
+                  <td className="px-6 py-4 font-semibold">{item.name}</td>
+                  <td className="px-6 py-4">{item.status}</td>
+                  <td className="px-6 py-4">{item.source}</td>
+                  <td className="px-6 py-4">{item.salesAgent?.name || "Unassigned"}</td>
+                  <td className="px-6 py-4">{item.priority || "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

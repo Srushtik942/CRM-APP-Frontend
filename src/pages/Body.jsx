@@ -92,10 +92,6 @@ const HandleNextBtn = ()=>{
   }
 }
 
-//   const leads = useMemo(
-//   () => (selectedFilter ? leads.filter((lead) => lead.status === selectedFilter) : leads),
-//   [leads, selectedFilter]
-// );
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-white p-4 text-green-950 sm:p-6 lg:p-10">
