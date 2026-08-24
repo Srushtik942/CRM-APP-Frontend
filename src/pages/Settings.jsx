@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { toast } from "react-hot-toast";
 
@@ -6,128 +6,94 @@ import { toast } from "react-hot-toast";
 const Settings = () => {
 
   const [leadList, setLeadList] = useState([]);
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const res = await axiosInstance.get("/leads");
+        setLeadList(res.data.leads || []);
+      } catch (error) {
+        console.error("Failed to fetch leads", error);
+      }
+    };
 
-  // Filters
-  const [priorityFilter, setPriorityFilter] = useState("");
-  const [agentFilter, setAgentFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [sourceFilter, setSourceFilter] = useState("");
-  const [tagFilter, setTagFilter] = useState("");
+    fetchLeads();
+  }, []);
 
-  // Sorting
-  const [sortType, setSortType] = useState("");
-
-  const [agents, setAgents] = useState([]);
-
-  // Build Query Params
-  const dynamicQuery = () => {
-    const params = new URLSearchParams();
-
-    if (priorityFilter) params.append("priority", priorityFilter);
-    if (agentFilter) params.append("salesAgent", agentFilter);
-    if (statusFilter) params.append("status", statusFilter);
-    if (sourceFilter) params.append("source", sourceFilter);
-    if (tagFilter) params.append("tags", tagFilter);
-    if (sortType) params.append("sort", sortType);
-
-    return params.toString();
-  };
-
-  const fetchLeads = async () => {
+  const handleDeleteLead = async (id) => {
     try {
-      const query = dynamicQuery();
-      const res = await axiosInstance.get(`/leads?${query}`);
-      setLeadList(res.data.leads || []);
+      await axiosInstance.delete(`/leads/${id}`);
+      setLeadList((currentLeads) => currentLeads.filter((lead) => lead._id !== id));
+      toast.success("Lead deleted successfully!");
     } catch (error) {
-      console.error("Failed to fetch leads", error);
+      console.error("Error deleting lead", error);
     }
   };
 
-  // Fetch leads whenever filter/sort changes
-  useEffect(() => {
-    fetchLeads();
-  }, [priorityFilter, agentFilter, statusFilter, sourceFilter, tagFilter, sortType]);
-
-  // Fetch agents list
-  useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const res = await axiosInstance.get("/agents");
-        setAgents(res.data.allAgents || []);
-      } catch (error) {
-        console.error("Failed to fetch agents", error);
-      }
-    };
-    fetchAgents();
-  }, []);
-
- const handleDeleteLead = async (id) => {
-  try {
-    await axiosInstance.delete(`/leads/${id}`);
-    // alert("Lead deleted successfully!");
-    toast.success('Lead deleted successfully!')
-
-    fetchLeads();
-  } catch (error) {
-    console.error("Error deleting lead", error);
-  }
-};
-
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-100 via-white to-green-100
-      py-8 px-4 md:px-6 lg:px-10">
+    <main className="min-h-screen bg-lime-50 px-4 py-8 text-green-900 md:px-6 lg:px-10">
 
       {/* Header */}
        <div className="max-w-4xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4 mb-8">
-        <h2 className="text-3xl md:text-4xl font-semibold text-gray-600">Lead List</h2>
+        <h1 className="text-3xl font-bold tracking-tight text-green-900 md:text-4xl">Lead list</h1>
       </div>
 
       {/* Lead List */}
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8">
-        <h3 className="text-2xl md:text-3xl text-center mb-6 text-gray-600">
+      <section className="mx-auto max-w-4xl rounded-2xl border border-lime-100 bg-white p-6 shadow-sm md:p-8">
+        <h2 className="mb-6 text-center text-2xl font-semibold text-green-900 md:text-3xl">
           Lead Overview
-        </h3>
+        </h2>
 
-        <div className="divide-y divide-gray-200">
-          {leadList.map((item, index) => (
-            <div key={index}
-            className="py-4 hover:bg-purple-50 transition-all cursor-pointer">
-
-              {/* Responsive Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-2 text-lg">
-
-                {/* Lead Name */}
-                <span className="font-semibold">{item.name}</span>
-
-                {/* Status */}
-                <span
-                  className={`px-4 py-1 rounded-lg text-sm md:mx-auto w-fit ${
-                    item.status === "New"
-                      ? "bg-green-100 text-green-700"
-                      : item.status === "Qualified"
-                      ? "bg-blue-100 text-blue-700"
-                      : "bg-purple-100 text-purple-700"
-                  }`}
-                >
-                  {item.status}
-                </span>
-
-                {/* Source */}
-                <span className=" md:text-right">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-lime-100 text-left">
+            <thead className="bg-lime-50 text-sm uppercase tracking-wide text-green-900">
+              <tr>
+                <th scope="col" className="px-4 py-3 font-semibold">Lead</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Source</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Agent</th>
+                <th scope="col" className="px-4 py-3 font-semibold">Status</th>
+                <th scope="col" className="px-4 py-3 text-right font-semibold">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-lime-100">
+              {leadList.length > 0 ? leadList.map((item) => (
+                <tr key={item._id} className="transition-colors hover:bg-lime-100">
+                  <td className="whitespace-nowrap px-4 py-4 font-semibold text-green-900">
+                    {item.name || "Untitled lead"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-4 text-sm text-green-900">
+                    {item.source || "—"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-4 text-sm text-green-900">
+                    {item.salesAgent?.name || "Unassigned"}
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-4">
+                    <span className="rounded-lg bg-lime-100 px-3 py-1 text-sm text-green-900">
+                      {item.status || "—"}
+                    </span>
+                  </td>
+                  <td className="whitespace-nowrap px-4 py-4 text-right">
                     <button
+                      type="button"
                       onClick={() => handleDeleteLead(item._id)}
-                    className='bg-red-600 text-white px-4 py-1 rounded-lg text-md cursor-pointer'>Delete</button>
-                </span>
-              </div>
-            </div>
-          ))}
+                      className="rounded-lg border border-green-700 px-3 py-1.5 text-sm font-semibold text-green-900 transition hover:bg-lime-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan="5" className="px-4 py-8 text-center text-sm text-green-900">
+                    No leads available.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
-      </div>
-
-
-
-    </div>
+      </section>
+    </main>
   );
 };
 
