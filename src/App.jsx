@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Toaster } from "react-hot-toast";
-import { Menu, Settings } from "lucide-react";
+import { Menu } from "lucide-react";
 
 
 import Signup from "./pages/Signup"
@@ -18,17 +18,41 @@ import SalesAgentView from "./pages/SalesAgentView";
 import LeadStatusView from "./pages/LeadStatusView";
 import StatusPage from "./pages/StatusPage";
 import NewSettings from "./pages/Settings"
+import Profile from "./pages/Profile";
+import LandingPage from "./pages/LandingPage";
 import "../chartConfig";
 
-function App() {
+function AppContent() {
   const [isOpen, setIsOpen] = useState(false);
+  const { pathname } = useLocation();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
+  const isAuthPage = pathname === "/login" || pathname === "/signup";
+
+  if (pathname === "/") {
+    return (
+      <>
+        <Toaster />
+        <LandingPage />
+      </>
+    );
+  }
+
+  if (isAuthPage) {
+    return (
+      <>
+        <Toaster />
+        <Routes>
+          <Route path="/signup" element={<Signup/>}/>
+          <Route path="/login" element={<Login/>}/>
+        </Routes>
+      </>
+    );
+  }
 
   return (
-    <BrowserRouter>
-      <div className="flex min-h-screen w-full bg-white">
+    <div className="flex min-h-screen w-full bg-white">
 
         {/* Sidebar with mobile support */}
         <Sidebar isOpen={isOpen} closeSidebar={closeSidebar} />
@@ -51,7 +75,7 @@ function App() {
             <Routes>
               <Route path="/signup" element={<Signup/>}/>
               <Route path="/login" element={<Login/>}/>
-              <Route path="/" element={<Body />} />
+              <Route path="/dashboard" element={<Body />} />
               <Route path="/lead" element={<LeadManagement />} />
               <Route path="/leadList" element={<LeadList />} />
               <Route path="/newLead" element={<NewLead />} />
@@ -63,11 +87,19 @@ function App() {
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/status" element={<StatusPage />} />
               <Route path="/setting" element={<NewSettings/>}/>
+              <Route path="/profile" element={<Profile/>}/>
             </Routes>
           </div>
         </div>
 
-      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }

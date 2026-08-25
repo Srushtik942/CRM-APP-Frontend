@@ -4,8 +4,8 @@ import { toast } from "react-hot-toast";
 
 
 const Settings = () => {
-
   const [leadList, setLeadList] = useState([]);
+
   useEffect(() => {
     const fetchLeads = async () => {
       try {
@@ -33,12 +33,6 @@ const Settings = () => {
   return (
     <main className="min-h-screen bg-lime-50 px-4 py-8 text-green-900 md:px-6 lg:px-10">
 
-      {/* Header */}
-       <div className="max-w-4xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-4 mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-green-900 md:text-4xl">Lead list</h1>
-      </div>
-
-      {/* Lead List */}
       <section className="mx-auto max-w-4xl rounded-2xl border border-lime-100 bg-white p-6 shadow-sm md:p-8">
         <h2 className="mb-6 text-center text-2xl font-semibold text-green-900 md:text-3xl">
           Lead Overview

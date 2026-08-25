@@ -1,14 +1,15 @@
 import React from "react";
-import { BarChart, Box, Clock, Home, Settings, Users } from "lucide-react";
+import { BarChart, Box, Clock, Home, Settings, UserCircle, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const menu = [
-  { label: "Home", icon: <Home size={18} />, path: "/" },
+  { label: "Home", icon: <Home size={18} />, path: "/dashboard" },
   { label: "Leads", icon: <BarChart size={18} />, path: "/leadList" },
   { label: "Sales", icon: <Users size={18} />, path: "/sales" },
   { label: "Agents", icon: <Clock size={18} />, path: "/agents" },
   { label: "Reports", icon: <Box size={18} />, path: "/reports" },
   { label: "Settings", icon: <Settings size={18} />, path: "/setting" },
+  { label: "Profile", icon: <UserCircle size={18} />, path: "/profile" },
 ];
 
 const Sidebar = ({ isOpen, closeSidebar }) => {

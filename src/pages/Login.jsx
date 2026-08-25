@@ -20,8 +20,15 @@ const Login = () => {
     setIsSubmitting(true)
 
     try {
-      await axiosInstance.post('/auth/login', formData)
-      navigate('/')
+      const response = await axiosInstance.post('/auth/login', formData)
+      const responseData = response.data || {}
+      const user = responseData.user || responseData.data?.user || responseData.data || responseData
+
+      localStorage.setItem('user', JSON.stringify({
+        name: user.name || user.username || '',
+        email: user.email || formData.email,
+      }))
+      navigate('/dashboard')
     } catch (requestError) {
       setError(requestError.response?.data?.message || 'Unable to log in. Please try again.')
     } finally {
