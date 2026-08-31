@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import { Combobox, Transition } from "@headlessui/react";
 import { Check, ChevronDown, X } from "lucide-react";
 import axiosInstance from "../api/axiosInstance";
 import toast from "react-hot-toast";
 
 const NewLead = () => {
+  const navigate = useNavigate();
   const [leadName, setLeadName] = useState("");
   const [source, setSource] = useState("");
   const [status, setStatus] = useState("");
@@ -61,7 +63,8 @@ const NewLead = () => {
     try {
       const res = await axiosInstance.post("/leads", payload);
       console.log("Lead Created:", res.data);
-      toast.success("Lead Created Successfully!")
+      toast.success("Lead Created Successfully!");
+      navigate("/leadList");
     } catch (err) {
       console.error(err);
       alert("Failed to create lead");
